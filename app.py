@@ -215,6 +215,8 @@ def validate_csv(df):
 def make_features(df_house, n_flats, n_floors, df_weather=None):
     data = df_house[['timestamp', 'power']].copy()
     data = data.sort_values('timestamp').reset_index(drop=True)
+    st.write(f'DEBUG power NaN: {data["power"].isnull().sum()}')
+    st.write(f'DEBUG power sample: {data["power"].head().tolist()}')
 
     data['hour'] = data['timestamp'].dt.hour
     data['minute'] = data['timestamp'].dt.minute
