@@ -249,10 +249,13 @@ def make_features(df_house, n_flats, n_floors, df_weather=None):
 
     data['n_flats'] = n_flats
     data['n_floors'] = n_floors
+    st.write(f'DEBUG before dropna: {len(data)}')
+    st.write(f'DEBUG NaN counts: {data[feature_cols].isnull().sum().to_dict()}')
     data = data.dropna(subset=[c for c in feature_cols
                                if c not in ['temp_c', 'humidity', 'cloudiness']]).reset_index(drop=True)
     for col in ['temp_c', 'humidity', 'cloudiness']:
         data[col] = data[col].fillna(0)
+    st.write(f'DEBUG after dropna: {len(data)}')
     return data
 
 # конфиг страницы
