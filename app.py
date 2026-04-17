@@ -377,6 +377,8 @@ with tab1:
             y_new = df_train['power_target']
 
             st.write('Fine-tuning модели')
+            st.write(f'DEBUG df_train shape: {df_train.shape}')
+            st.write(f'DEBUG x_new shape: {x_new.shape}')
             ft_model = LGBMRegressor(
                 n_estimators=100,
                 learning_rate=0.05,
