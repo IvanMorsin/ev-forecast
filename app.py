@@ -168,7 +168,7 @@ def get_weather_forecast(lat, lon):
         'timezone': 'Europe/Moscow',
     }
     try:
-        resp = requests.get(url, params=params, timeout=10)
+        resp = requests.get(url, params=params, timeout=30)
         resp.raise_for_status()
         data = resp.json()
         df_weather = pd.DataFrame({
@@ -244,7 +244,10 @@ def make_features(df_house, n_flats, n_floors, df_weather=None):
 
     data['n_flats'] = n_flats
     data['n_floors'] = n_floors
-    data = data.dropna(subset=feature_cols).reset_index(drop=True)
+    data = data.dropna(subset=[c for c in feature_cols
+                               if c not in ['temp_c', 'humidity', 'cloudiness']]).reset_index(drop=True)
+    for col in ['temp_c', 'humidity', 'cloudiness']:
+        data[col] = data[col].fillna(0)
     return data
 
 # конфиг страницы
