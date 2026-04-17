@@ -350,7 +350,9 @@ if run_btn:
         'horizon': horizon,
         'city': city,
     }
-
+st.write(f'DEBUG df_raw shape: {df_raw.shape}')
+st.write(f'DEBUG df_feat shape: {df_feat.shape}')
+st.write(f'DEBUG df_feat NaN: {df_feat.isnull().sum().sum()}')
 # вкладка 1 - прогноз электрической нагрузки
 with tab1:
     if st.session_state['results'] is None:
