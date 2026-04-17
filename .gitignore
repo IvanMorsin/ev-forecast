@@ -1,5 +1,3 @@
-models/
-models_ev/
 venv/
 __pycache__/
 *.pyc
