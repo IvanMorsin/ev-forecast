@@ -1,0 +1,10 @@
+streamlit
+lightgbm==4.1.0
+pandas
+numpy<2
+plotly
+requests
+workalendar
+torch==2.1.0
+scikit-learn
+joblib
