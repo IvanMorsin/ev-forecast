@@ -230,10 +230,15 @@ def make_features(df_house, n_flats, n_floors, df_weather=None):
     data['rolling_mean_336'] = data['power'].shift(1).rolling(336).mean()
 
     if df_weather is not None:
-        data = data.merge(
-            df_weather[['timestamp', 'temp_c', 'humidity', 'cloudiness']],
+        df_weather = df_weather.copy()
+        df_weather['timestamp'] = pd.to_datetime(df_weather['timestamp'])
+        data['timestamp'] = pd.to_datetime(data['timestamp'])
+        data = pd.merge_asof(
+            data.sort_values('timestamp'),
+            df_weather[['timestamp', 'temp_c', 'humidity', 'cloudiness']].sort_values('timestamp'),
             on='timestamp',
-            how='left',
+            direction='nearest',
+            tolerance=pd.Timedelta('1h'),
         )
         for col in ['temp_c', 'humidity', 'cloudiness']:
             data[col] = data[col].ffill().fillna(0)
