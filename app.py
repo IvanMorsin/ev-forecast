@@ -371,6 +371,7 @@ with tab1:
         status = st.status('Выполняется анализ', expanded=True)
         with status:
             st.write('Подготовка данных')
+            df_feat = df_feat.copy()
             df_feat['power_target'] = df_feat['power'].shift(-hz_steps)
             df_train = df_feat.dropna(subset=['power_target'])
             x_new = df_train[feature_cols]
@@ -504,6 +505,7 @@ with tab2:
         status2 = st.status('Выполняется анализ', expanded=True)
         with status2:
             st.write('Подготовка данных')
+            df_feat = df_feat.copy()
             df_feat['power_target'] = df_feat['power'].shift(-hz_steps)
             df_train = df_feat.dropna(subset=['power_target'])
 
