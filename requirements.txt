@@ -1,6 +1,6 @@
 streamlit
 lightgbm==4.1.0
-pandas
+pandas==2.2.3
 numpy<2
 plotly
 requests
