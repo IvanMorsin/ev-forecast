@@ -1,1 +1,9 @@
 streamlit
+pandas==2.2.3
+numpy<2
+joblib
+scikit-learn
+requests
+plotly
+workalendar
+lightgbm==4.1.0
