@@ -7,3 +7,4 @@ requests
 plotly
 workalendar
 lightgbm==4.1.0
+torch==2.2.2
