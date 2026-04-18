@@ -5,5 +5,6 @@ numpy<2
 plotly
 requests
 workalendar
+torch==2.9.0
 scikit-learn
 joblib
