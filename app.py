@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 import joblib
 import requests
-#import torch
-#import torch.nn as nn
+import torch
+import torch.nn as nn
 
 # Константы
 house_meta = {
@@ -82,9 +82,6 @@ cities = {
 }
 
 # Модели
-
-
-
 @st.cache_resource
 def load_point_models():
     models = {}
@@ -215,8 +212,6 @@ def validate_csv(df):
 def make_features(df_house, n_flats, n_floors, df_weather=None):
     data = df_house[['timestamp', 'power']].copy()
     data = data.sort_values('timestamp').reset_index(drop=True)
-    st.write(f'DEBUG power NaN: {data["power"].isnull().sum()}')
-    st.write(f'DEBUG power sample: {data["power"].head().tolist()}')
 
     data['hour'] = data['timestamp'].dt.hour
     data['minute'] = data['timestamp'].dt.minute
@@ -231,9 +226,6 @@ def make_features(df_house, n_flats, n_floors, df_weather=None):
     power_shifted = data['power'].shift(1).copy().reset_index(drop=True)
     data['rolling_mean_48'] = power_shifted.rolling(48).mean()
     data['rolling_mean_336'] = power_shifted.rolling(336).mean()
-    st.write(f'DEBUG rolling_48 NaN: {data["rolling_mean_48"].isnull().sum()}')
-    st.write(f'DEBUG rolling_48 sample: {data["rolling_mean_48"].dropna().head().tolist()}')
-    st.write(f'DEBUG power dtype: {data["power"].dtype}')
 
     if df_weather is not None:
         df_weather = df_weather.copy()
@@ -255,13 +247,10 @@ def make_features(df_house, n_flats, n_floors, df_weather=None):
 
     data['n_flats'] = n_flats
     data['n_floors'] = n_floors
-    st.write(f'DEBUG before dropna: {len(data)}')
-    st.write(f'DEBUG NaN counts: {data[feature_cols].isnull().sum().to_dict()}')
     data = data.dropna(subset=[c for c in feature_cols
                                if c not in ['temp_c', 'humidity', 'cloudiness']]).reset_index(drop=True)
     for col in ['temp_c', 'humidity', 'cloudiness']:
         data[col] = data[col].fillna(0)
-    st.write(f'DEBUG after dropna: {len(data)}')
     return data
 
 # конфиг страницы
@@ -364,9 +353,7 @@ if run_btn:
         'horizon': horizon,
         'city': city,
     }
-st.write(f'DEBUG df_raw shape: {df_raw.shape}')
-st.write(f'DEBUG df_feat shape: {df_feat.shape}')
-st.write(f'DEBUG df_feat NaN: {df_feat.isnull().sum().sum()}')
+
 # вкладка 1 - прогноз электрической нагрузки
 with tab1:
     if st.session_state['results'] is None:
@@ -394,8 +381,6 @@ with tab1:
             y_new = df_train['power_target']
 
             st.write('Fine-tuning модели')
-            st.write(f'DEBUG df_train shape: {df_train.shape}')
-            st.write(f'DEBUG x_new shape: {x_new.shape}')
             ft_model = LGBMRegressor(
                 n_estimators=100,
                 learning_rate=0.05,
