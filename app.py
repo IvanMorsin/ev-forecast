@@ -228,8 +228,9 @@ def make_features(df_house, n_flats, n_floors, df_weather=None):
 
     for lag in [1, 2, 48, 96, 336]:
         data[f'lag_{lag}'] = data['power'].shift(lag)
-    data['rolling_mean_48'] = data['power'].shift(1).rolling(48).mean()
-    data['rolling_mean_336'] = data['power'].shift(1).rolling(336).mean()
+    power_shifted = data['power'].shift(1).copy().reset_index(drop=True)
+    data['rolling_mean_48'] = power_shifted.rolling(48).mean()
+    data['rolling_mean_336'] = power_shifted.rolling(336).mean()
     st.write(f'DEBUG rolling_48 NaN: {data["rolling_mean_48"].isnull().sum()}')
     st.write(f'DEBUG rolling_48 sample: {data["rolling_mean_48"].dropna().head().tolist()}')
     st.write(f'DEBUG power dtype: {data["power"].dtype}')
