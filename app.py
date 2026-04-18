@@ -3,8 +3,6 @@ import pandas as pd
 import numpy as np
 import joblib
 import requests
-import torch
-import torch.nn as nn
 
 # Константы
 house_meta = {
